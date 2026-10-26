@@ -1,0 +1,13 @@
+# Données : téléchargées par le projet, jamais versionnées
+data/
+
+# Environnement Python et fichiers générés automatiquement
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Fichier système du Mac
+.DS_Store
