@@ -8,6 +8,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .ipynb_checkpoints/
+brouillon/
 
 # Fichier système du Mac
 .DS_Store
