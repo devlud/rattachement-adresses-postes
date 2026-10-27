@@ -6,7 +6,9 @@ version = "0.1.0"
 description = "Rattache chaque adresse de la BAN au poste HTA/BT Enedis le plus proche."
 authors = [{ name = "Ludovic Ravenach" }]
 requires-python = ">=3.10"
-dependencies = []  # bibliothèques ajoutées au fil des étapes
+dependencies = [  # bibliothèques ajoutées au fil des étapes
+    "requests",  # étape 2 : téléchargement des données
+]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff", "ipykernel"]  # outils de travail : tests, style, notebooks
