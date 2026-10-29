@@ -9,6 +9,7 @@ Utilisation, depuis le dossier du projet :
 """
 
 import sys
+import time
 from datetime import datetime
 
 import requests
@@ -25,30 +26,6 @@ URL_POSTES = (
 )
 
 
-def noter_dans_le_journal(fichier, url):
-    """Ajoute une ligne au journal des téléchargements : quand, quel fichier, d'où."""
-    date = datetime.now().astimezone().isoformat(timespec="seconds")
-    with open(RAW_DIR / "journal.csv", "a", encoding="utf-8") as journal:
-        journal.write(f"{date},{fichier},{url}\n")
-
-
-def telecharger_ban(departement):
-    """Télécharge les adresses d'un département : un seul fichier, compressé."""
-    RAW_DIR.mkdir(parents=True, exist_ok=True)  # crée data/raw s'il n'existe pas encore
-    url = URL_BAN.format(departement=departement)
-    reponse = requests.get(url, timeout=120)
-    reponse.raise_for_status()  # arrête tout si le serveur répond par une erreur
-
-    fichier = RAW_DIR / f"adresses-{departement}.csv.gz"
-    fichier.write_bytes(reponse.content)  # on garde le fichier tel quel, compressé
-    noter_dans_le_journal(fichier.name, url)
-    print(f"Adresses du {departement} : {fichier}")
-
-
-def retirer_premiere_ligne(texte):
-    """Retire la première ligne d'un texte : ici, les noms de colonnes."""
-    return texte.split("\n", 1)[1]
-
 def telecharger_url(url, essais=5):
     """Télécharge une adresse. En cas d'échec (coupure, serveur saturé), attend puis réessaie."""
     for essai in range(1, essais + 1):
@@ -64,14 +41,37 @@ def telecharger_url(url, essais=5):
             time.sleep(attente)
 
 
+def noter_dans_le_journal(fichier, url):
+    """Ajoute une ligne au journal des téléchargements : quand, quel fichier, d'où."""
+    date = datetime.now().astimezone().isoformat(timespec="seconds")
+    with open(RAW_DIR / "journal.csv", "a", encoding="utf-8") as journal:
+        journal.write(f"{date},{fichier},{url}\n")
+
+
+def telecharger_ban(departement):
+    """Télécharge les adresses d'un département : un seul fichier, compressé."""
+    RAW_DIR.mkdir(parents=True, exist_ok=True)  # crée data/raw s'il n'existe pas encore
+    url = URL_BAN.format(departement=departement)
+    reponse = telecharger_url(url)
+
+    fichier = RAW_DIR / f"adresses-{departement}.csv.gz"
+    fichier.write_bytes(reponse.content)  # on garde le fichier tel quel, compressé
+    noter_dans_le_journal(fichier.name, url)
+    print(f"Adresses du {departement} : {fichier}")
+
+
+def retirer_premiere_ligne(texte):
+    """Retire la première ligne d'un texte : ici, les noms de colonnes."""
+    return texte.split("\n", 1)[1]
+
+
 def telecharger_postes():
     """Télécharge les postes HTA/BT, page par page."""
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     pages = []
     url = URL_POSTES
     while url:  # tant qu'il reste une page à télécharger
-        reponse = requests.get(url, timeout=120)
-        reponse.raise_for_status()
+        reponse = telecharger_url(url)
         texte = reponse.content.decode("utf-8")
         if pages:  # chaque page répète les noms de colonnes : on ne les garde qu'une fois
             texte = retirer_premiere_ligne(texte)
@@ -90,6 +90,6 @@ def telecharger_postes():
 
 # Ce bloc ne s'exécute que lorsqu'on lance le fichier en ligne de commande.
 if __name__ == "__main__":
-    telecharger_postes()
     for departement in sys.argv[1:]:  # les numéros écrits après la commande, ex. 69 75
         telecharger_ban(departement)
+    telecharger_postes()
