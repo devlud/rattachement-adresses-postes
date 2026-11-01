@@ -1,0 +1,35 @@
+# Intégration continue : à chaque envoi sur GitHub (push), GitHub prend une machine neuve,
+# installe le projet et lance les vérifications. Le résultat apparaît dans l'onglet « Actions »
+# du dépôt, et sous forme de coche verte (ou de croix rouge) à côté de chaque commit.
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest  # une machine Linux, mise à disposition par GitHub
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+
+      - name: Installer Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Installer Java, pour Spark
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Installer le projet
+        run: pip install -e ".[dev,spark]"
+
+      - name: Vérifier le style du code
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Lancer les tests
+        run: pytest
