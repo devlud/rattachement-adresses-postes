@@ -17,25 +17,31 @@ def test_preparer_distributeurs():
     assert list(distributeurs["code_insee"]) == ["69381", "67482", "00001", "00002"]
     # Enedis seul ; un autre distributeur ; Enedis en second distributeur ; aucun distributeur
     assert list(distributeurs["enedis"]) == [True, False, True, False]
+    # Seule la troisième commune a deux distributeurs
+    assert list(distributeurs["commune_mixte"]) == [False, False, True, False]
 
 
-# Deux communes de la liste : Lyon 1er (Enedis) et Strasbourg (une ELD)
+# Trois communes de la liste : Lyon 1er (Enedis), Strasbourg (une ELD), une commune mixte
 DISTRIBUTEURS = pd.DataFrame(
     {
-        "code_insee": ["69381", "67482"],
-        "distributeur": ["Enedis", "Strasbourg Électricité Réseaux"],
-        "enedis": [True, False],
+        "code_insee": ["69381", "67482", "00001"],
+        "distributeur": ["Enedis", "Strasbourg Électricité Réseaux", "Enedis,GÉRÉDIS"],
+        "enedis": [True, False, True],
+        "commune_mixte": [False, False, True],
     }
 )
 
 
 def test_ajouter_distributeur():
-    adresses = pd.DataFrame({"id": ["a1", "a2", "a3"], "code_insee": ["69381", "67482", "99999"]})
+    adresses = pd.DataFrame(
+        {"id": ["a1", "a2", "a3", "a4"], "code_insee": ["69381", "67482", "00001", "99999"]}
+    )
     resultat = ajouter_distributeur(adresses, DISTRIBUTEURS)
-    assert list(resultat["id"]) == ["a1", "a2", "a3"]  # toutes les adresses sont gardées
+    assert list(resultat["id"]) == ["a1", "a2", "a3", "a4"]  # toutes les adresses sont gardées
     assert resultat["distributeur"].iloc[1] == "Strasbourg Électricité Réseaux"
-    assert pd.isna(resultat["distributeur"].iloc[2])  # commune 99999 absente de la liste
-    assert list(resultat["enedis"]) == [True, False, False]
+    assert pd.isna(resultat["distributeur"].iloc[3])  # commune 99999 absente de la liste
+    assert list(resultat["enedis"]) == [True, False, True, False]
+    assert list(resultat["commune_mixte"]) == [False, False, True, False]
 
 
 def test_commune_en_double_refusee():

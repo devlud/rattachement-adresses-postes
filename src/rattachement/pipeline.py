@@ -89,6 +89,7 @@ def traiter_departement(departement, postes, distributeurs):
         # Adresses sans poste Enedis (~ veut dire « non ») : autre distributeur, ou commune inconnue
         "hors_enedis": int((~resultat["enedis"]).sum()),
         "distributeur_inconnu": int(resultat["distributeur"].isna().sum()),
+        "commune_mixte": int(resultat["commune_mixte"].sum()),  # deux distributeurs : moins sûr
         "distance_mediane_m": round(resultat["distance_m"].median(), 1),  # cases vides ignorées
         "distance_max_m": round(resultat["distance_m"].max(), 1),
         "hors_seuil": int(resultat["hors_seuil"].sum()),  # True compte pour 1, False pour 0

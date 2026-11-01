@@ -39,6 +39,7 @@ def test_enrichir():
             "code_insee": ["69381", "67482"],
             "distributeur": ["Enedis", "Strasbourg Électricité Réseaux"],
             "enedis": [True, False],
+            "commune_mixte": [False, False],
         }
     )
     resultat = enrichir(adresses, postes, distributeurs)

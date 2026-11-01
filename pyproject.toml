@@ -12,6 +12,7 @@ dependencies = [  # bibliothèques ajoutées au fil des étapes
     "pandera",  # étape 3 : contrôle de la qualité des données
     "geopandas",  # étape 5 : calcul spatial (poste le plus proche)
     "pyarrow",  # étape 6 : enregistrement des résultats au format Parquet
+    "matplotlib",  # étape 9 : graphique des distances et carte
 ]
 
 [project.optional-dependencies]

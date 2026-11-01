@@ -21,5 +21,7 @@ CRS_LAMBERT93 = "EPSG:2154"  # x / y en mètres, projection officielle en France
 # Même là, Enedis ne dessert pas toutes les communes : voir perimetre.py.
 DEPARTEMENTS = [f"{i:02d}" for i in range(1, 96) if i != 20]
 
-# Distance au-delà de laquelle un rattachement est jugé suspect (à calibrer à l'étape 9)
-SEUIL_DISTANCE_M = 2000
+# Distance au-delà de laquelle un rattachement est jugé suspect. Choisie à l'étape 9, d'après
+# les données de toute la France : au-delà d'un kilomètre, le nombre d'adresses cesse de chuter
+# vite (on entre dans les anomalies), et un raccordement en basse tension devient peu plausible.
+SEUIL_DISTANCE_M = 1_000
