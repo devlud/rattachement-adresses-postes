@@ -16,6 +16,7 @@ dependencies = [  # bibliothèques ajoutées au fil des étapes
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff", "ipykernel"]  # outils de travail : tests, style, notebooks
+spark = ["pyspark>=3.5"]  # étape 8 : calcul avec Spark (demande aussi Java 17 ou plus)
 
 [build-system]
 requires = ["hatchling"]
