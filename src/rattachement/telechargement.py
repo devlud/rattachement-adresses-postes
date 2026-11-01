@@ -1,8 +1,9 @@
 """Téléchargement des données du projet.
 
-Deux sources :
+Trois sources :
 1. la Base Adresse Nationale (BAN) : un fichier par département ;
-2. les postes électriques HTA/BT d'Enedis : servis par une API, page par page.
+2. les postes électriques HTA/BT d'Enedis : servis par une API, page par page ;
+3. la liste des distributeurs d'électricité de chaque commune (Agence ORE) : un seul fichier.
 
 Utilisation, depuis le dossier du projet :
     python -m rattachement.telechargement 69
@@ -24,6 +25,10 @@ URL_POSTES = (
     "https://opendata.enedis.fr/data-fair/api/v1/datasets/poste-electrique/lines"
     "?size=10000&format=csv"
 )
+
+# Adresse de la liste des distributeurs par commune sur data.gouv.fr : elle mène toujours
+# à la dernière version du fichier
+URL_DISTRIBUTEURS = "https://www.data.gouv.fr/api/1/datasets/r/5d513c1f-c9e3-48ea-8cd7-ba17babc54f8"
 
 
 def telecharger_url(url, essais=5):
@@ -88,8 +93,20 @@ def telecharger_postes():
     print(f"Postes : {fichier}")
 
 
+def telecharger_distributeurs():
+    """Télécharge la liste des distributeurs d'électricité de chaque commune."""
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
+    reponse = telecharger_url(URL_DISTRIBUTEURS)  # requests suit la redirection de data.gouv.fr
+
+    fichier = RAW_DIR / "distributeurs-par-commune.csv"
+    fichier.write_bytes(reponse.content)
+    noter_dans_le_journal(fichier.name, URL_DISTRIBUTEURS)
+    print(f"Distributeurs : {fichier}")
+
+
 # Ce bloc ne s'exécute que lorsqu'on lance le fichier en ligne de commande.
 if __name__ == "__main__":
     for departement in sys.argv[1:]:  # les numéros écrits après la commande, ex. 69 75
         telecharger_ban(departement)
     telecharger_postes()
+    telecharger_distributeurs()
