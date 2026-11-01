@@ -2,8 +2,13 @@
 
 from pathlib import Path
 
+# Dossier racine du projet, calculé à partir de l'emplacement de ce fichier :
+# config.py est dans src/rattachement/, on remonte donc de deux dossiers.
+# Ainsi, les chemins restent justes même depuis un notebook rangé dans brouillon/.
+RACINE = Path(__file__).resolve().parents[2]
+
 # Dossiers des données (exclus de Git par le .gitignore)
-DATA_DIR = Path("data")
+DATA_DIR = RACINE / "data"
 RAW_DIR = DATA_DIR / "raw"  # fichiers téléchargés, tels quels
 OUTPUT_DIR = DATA_DIR / "output"  # résultats du projet
 

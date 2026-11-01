@@ -8,6 +8,8 @@ authors = [{ name = "Ludovic Ravenach" }]
 requires-python = ">=3.10"
 dependencies = [  # bibliothèques ajoutées au fil des étapes
     "requests",  # étape 2 : téléchargement des données
+    "pandas",  # étape 3 : lecture et exploration des tableaux
+    "pandera",  # étape 3 : contrôle de la qualité des données
 ]
 
 [project.optional-dependencies]
