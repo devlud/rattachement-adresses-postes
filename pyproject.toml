@@ -10,6 +10,7 @@ dependencies = [  # bibliothèques ajoutées au fil des étapes
     "requests",  # étape 2 : téléchargement des données
     "pandas",  # étape 3 : lecture et exploration des tableaux
     "pandera",  # étape 3 : contrôle de la qualité des données
+    "geopandas",  # étape 5 : calcul spatial (poste le plus proche)
 ]
 
 [project.optional-dependencies]
