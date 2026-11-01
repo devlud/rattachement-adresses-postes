@@ -11,6 +11,7 @@ dependencies = [  # bibliothèques ajoutées au fil des étapes
     "pandas",  # étape 3 : lecture et exploration des tableaux
     "pandera",  # étape 3 : contrôle de la qualité des données
     "geopandas",  # étape 5 : calcul spatial (poste le plus proche)
+    "pyarrow",  # étape 6 : enregistrement des résultats au format Parquet
 ]
 
 [project.optional-dependencies]

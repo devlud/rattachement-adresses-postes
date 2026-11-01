@@ -11,6 +11,7 @@ RACINE = Path(__file__).resolve().parents[2]
 DATA_DIR = RACINE / "data"
 RAW_DIR = DATA_DIR / "raw"  # fichiers téléchargés, tels quels
 OUTPUT_DIR = DATA_DIR / "output"  # résultats du projet
+RATTACHEMENT_DIR = OUTPUT_DIR / "rattachement"  # adresses rattachées : un fichier par département
 
 # Systèmes de coordonnées
 CRS_WGS84 = "EPSG:4326"  # longitude / latitude en degrés, comme un GPS
